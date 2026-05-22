@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KDD 2026 Tutorial | Taming Structured Data Foundation Models with AutoML</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172033;
+      --muted: #586174;
+      --brand: #FF9900;
+      --brand2: #232F3E;
+      --brand3: #146EB4;
+      --bg: #f6f8fc;
+      --card: #fff;
+      --line: #dfe5f2;
+      --soft: #fff8ec;
+      --warn: #fff6d8;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--ink); background: var(--bg); line-height: 1.6; }
+    header { padding: 64px 22px 44px; background: radial-gradient(circle at top left, rgba(255,255,255,.18), transparent 32%), linear-gradient(135deg, #0a1628, #232F3E 55%, #146EB4); color: white; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px 22px 72px; }
+    h1 { max-width: 1040px; margin: 0 auto 14px; font-size: clamp(2.1rem, 5vw, 3.8rem); line-height: 1.06; letter-spacing: -.04em; }
+    h2 { margin: 46px 0 14px; font-size: 1.85rem; letter-spacing: -.02em; }
+    h3 { margin: 0 0 8px; font-size: 1.1rem; }
+    header p { max-width: 1040px; margin: 0 auto; color: #cce3ff; font-size: 1.18rem; }
+    a { color: var(--brand3); text-decoration: none; font-weight: 600; }
+    a:hover { text-decoration: underline; }
+    .eyebrow { max-width: 1040px; margin: 0 auto 14px; color: #ffd180; text-transform: uppercase; letter-spacing: .12em; font-size: .78rem; font-weight: 800; }
+    .hero-actions { max-width: 1040px; margin: 24px auto 0; display: flex; flex-wrap: wrap; gap: 12px; }
+    .button { display: inline-block; padding: 11px 18px; border-radius: 999px; background: white; color: #172033; box-shadow: 0 10px 28px rgba(0,0,0,.22); font-weight: 700; }
+    .button.secondary { background: rgba(255,255,255,.14); color: white; border: 1px solid rgba(255,255,255,.4); box-shadow: none; }
+    .button:hover { text-decoration: none; opacity: .9; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 22px 0; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin: 22px 0; }
+    .two-col { display: grid; grid-template-columns: 1.05fr .95fr; gap: 18px; align-items: start; }
+    .card, .panel { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 22px; box-shadow: 0 8px 28px rgba(23,32,51,.06); }
+    .muted { color: var(--muted); }
+    .pill { display: inline-block; padding: 5px 10px; border-radius: 999px; background: var(--soft); color: #8a5800; font-size: .82rem; font-weight: 700; margin: 3px 4px 3px 0; }
+    .pill.blue { background: #e8f2ff; color: #1a4f99; }
+    .pill.green { background: #e7fff9; color: #007965; }
+    .pill.part { background: #232F3E; color: #fff; font-size: .78rem; }
+    table { width: 100%; border-collapse: collapse; background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 8px 28px rgba(23,32,51,.05); }
+    th, td { padding: 11px 14px; border-bottom: 1px solid var(--line); text-align: left; font-size: .94rem; }
+    th { background: #f0f4fc; color: #253054; font-weight: 700; }
+    tr:last-child td { border-bottom: none; }
+    code, pre { background: #edf1f8; border-radius: 8px; font-family: "SF Mono", "Fira Code", monospace; font-size: .91rem; }
+    code { padding: 2px 6px; }
+    pre { padding: 15px; overflow: auto; border: 1px solid var(--line); }
+    .step-list { counter-reset: step; display: grid; gap: 12px; }
+    .step { position: relative; padding: 16px 16px 16px 60px; background: white; border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 2px 8px rgba(23,32,51,.04); }
+    .step:before { counter-increment: step; content: counter(step); position: absolute; left: 16px; top: 16px; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--brand3); color: white; font-weight: 800; font-size: .95rem; }
+    .diagram { background: white; border: 1px solid var(--line); border-radius: 18px; padding: 16px; overflow: auto; box-shadow: 0 8px 28px rgba(23,32,51,.05); }
+    svg { max-width: 100%; height: auto; }
+    .callout { border-left: 5px solid var(--brand); background: #fffbf0; padding: 16px 18px; border-radius: 14px; }
+    .callout.blue { border-left-color: var(--brand3); background: #eef5ff; }
+    footer { border-top: 1px solid var(--line); color: var(--muted); padding: 28px 22px; text-align: center; background: white; font-size: .92rem; }
+    .author-tag { font-size: .8rem; color: var(--muted); font-weight: 400; margin-left: 4px; }
+    .badge { display: inline-block; padding: 3px 9px; border-radius: 6px; background: #FF9900; color: #fff; font-size: .75rem; font-weight: 700; margin-bottom: 6px; }
+    .badge.aws { background: #232F3E; }
+    .badge.prior { background: #5a35c2; }
+    @media (max-width: 860px) {
+      .two-col { grid-template-columns: 1fr; }
+      th, td { font-size: .82rem; padding: 8px; }
+      h1 { font-size: 2.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">KDD 2026 Tutorial &middot; Jeju, Korea</div>
+  <h1>Taming Structured Data Foundation Models with AutoML: A Hands-On Guide</h1>
+  <p>A 3-hour hands-on tutorial teaching attendees how to operationalize Foundation Models for Structured Data (FM4SD) using AutoML across temporal and tabular modalities, with a highlight on Chronos-2.</p>
+  <div class="hero-actions">
+    <a class="button" href="#outline">View Tutorial Outline</a>
+    <a class="button secondary" href="#notebooks">Open Notebooks</a>
+    <a class="button secondary" href="#tutors">Meet the Tutors</a>
+    <a class="button secondary" href="https://arxiv.org/abs/2510.15821" target="_blank">Chronos-2 Paper</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- Quick Links -->
+  <section class="grid" aria-label="Quick links">
+    <div class="card">
+      <h3>Notebooks</h3>
+      <p class="muted">Hands-on Colab notebooks covering AutoGluon, Chronos-2, and tabular foundation models from setup to advanced topics.</p>
+      <a href="#notebooks">Browse notebooks &rarr;</a>
+    </div>
+    <div class="card">
+      <h3>Tutorial Paper</h3>
+      <p class="muted">The accepted KDD&rsquo;26 tutorial paper describing the motivation, outline, and prior presentations.</p>
+      <a href="#" id="paper-link">Read tutorial paper &rarr;</a>
+    </div>
+    <div class="card">
+      <h3>AutoGluon</h3>
+      <p class="muted">Open-source AutoML framework powering this tutorial. State-of-the-art on tabular and time-series benchmarks.</p>
+      <a href="https://auto.gluon.ai" target="_blank">auto.gluon.ai &rarr;</a>
+    </div>
+    <div class="card">
+      <h3>Chronos-2</h3>
+      <p class="muted">New multivariate zero-shot time-series foundation model from AWS. Extends Chronos to universal forecasting.</p>
+      <a href="https://arxiv.org/abs/2510.15821" target="_blank">arXiv preprint &rarr;</a>
+    </div>
+  </section>
+
+  <!-- Abstract -->
+  <section>
+    <h2>About This Tutorial</h2>
+    <div class="card">
+      <p>Structured data drives enterprise decision-making, yet building predictive pipelines for time-series and tabular modalities requires intensive feature engineering, model selection, and other &ldquo;tricks of the trade&rdquo;. <strong>AutoGluon</strong>, an open-source AutoML system, automates this through multi-layer stack ensembling, providing a unified API that reliably achieves state-of-the-art accuracy across time series and tabular data.</p>
+      <p>Concurrently, <strong>Foundation Models for Structured Data (FM4SD)</strong> have emerged to push the boundaries of predictive performance, enabling both powerful zero-shot inference and efficient fine-tuning. Specifically, <strong>Chronos-2</strong> delivers state-of-the-art multivariate forecasting for time series, while a rapidly growing ecosystem of tabular foundation models (e.g., TabPFN, Mitra, TabICL) transforms how practitioners execute classification and regression tasks.</p>
+      <p>This system-focused tutorial teaches attendees how to operationalize FM4SDs using AutoML across temporal and tabular modalities. We guide participants through a technical progression: establishing AutoGluon as the orchestration framework, detailing the internal mechanics of Chronos-2 and various tabular FMs, and unifying them into production-ready pipelines.</p>
+      <div class="callout" style="margin-top:18px;">
+        <strong>What attendees will do:</strong> Execute Colab notebooks to tokenize multivariate time series with Chronos-2 and process structured features utilizing diverse tabular foundation models. Participants will bypass standard data formatting bottlenecks, configure AutoML parameters, and fuse fine-tuned foundation models with classical ML baselines to maximize accuracy.
+      </div>
+    </div>
+    <div class="grid" style="margin-top:16px;">
+      <div class="card">
+        <h3>Key Topics</h3>
+        <p><span class="pill blue">AutoGluon</span><span class="pill blue">Chronos-2</span><span class="pill blue">TabPFN</span><span class="pill blue">Mitra</span><span class="pill blue">TabICL</span><span class="pill">Time Series</span><span class="pill">Tabular Data</span><span class="pill">FM4SD</span><span class="pill">AutoML</span><span class="pill">Stack Ensembling</span><span class="pill">Zero-shot Forecasting</span></p>
+      </div>
+      <div class="card">
+        <h3>Requirements</h3>
+        <ul class="muted" style="padding-left:18px;margin:0;">
+          <li>Laptop with a modern web browser</li>
+          <li>Google Colab (free tier with CPU/T4 GPU)</li>
+          <li>Basic Python and ML familiarity</li>
+        </ul>
+        <p style="margin-top:12px;"><span class="pill green">No GPU required</span><span class="pill green">Free tier sufficient</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tutorial Outline -->
+  <section id="outline">
+    <h2>Tutorial Outline (3 hours)</h2>
+    <p>The tutorial guides attendees from foundational AutoML principles to the deployment of cutting-edge FM4SD engines.</p>
+
+    <div class="diagram" aria-label="Tutorial timeline" style="margin-bottom:22px;">
+      <svg width="980" height="230" viewBox="0 0 980 230" role="img" aria-label="KDD tutorial 3-hour timeline">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#146EB4"/>
+          </marker>
+        </defs>
+        <line x1="60" y1="100" x2="930" y2="100" stroke="#dfe5f2" stroke-width="14" stroke-linecap="round"/>
+        <!-- Part 1 -->
+        <rect x="60" y="68" width="185" height="64" rx="18" fill="#fff8ec" stroke="#FF9900"/>
+        <text x="152" y="95" text-anchor="middle" font-size="15" font-weight="700" fill="#172033">Part 1</text>
+        <text x="152" y="116" text-anchor="middle" font-size="12" fill="#586174">Modern Toolkit</text>
+        <text x="152" y="160" text-anchor="middle" font-size="12" fill="#FF9900" font-weight="700">30 min</text>
+        <!-- Part 2 -->
+        <rect x="265" y="68" width="230" height="64" rx="18" fill="#eef5ff" stroke="#146EB4"/>
+        <text x="380" y="95" text-anchor="middle" font-size="15" font-weight="700" fill="#172033">Part 2</text>
+        <text x="380" y="116" text-anchor="middle" font-size="12" fill="#586174">AutoGluon Fundamentals</text>
+        <text x="380" y="160" text-anchor="middle" font-size="12" fill="#146EB4" font-weight="700">60 min</text>
+        <!-- Part 3 -->
+        <rect x="515" y="68" width="270" height="64" rx="18" fill="#eef5ff" stroke="#146EB4"/>
+        <text x="650" y="95" text-anchor="middle" font-size="15" font-weight="700" fill="#172033">Part 3</text>
+        <text x="650" y="116" text-anchor="middle" font-size="12" fill="#586174">Foundation Models Deep Dive</text>
+        <text x="650" y="160" text-anchor="middle" font-size="12" fill="#146EB4" font-weight="700">60 min</text>
+        <!-- Part 4 -->
+        <rect x="805" y="68" width="130" height="64" rx="18" fill="#e7fff9" stroke="#007965"/>
+        <text x="870" y="95" text-anchor="middle" font-size="15" font-weight="700" fill="#172033">Part 4</text>
+        <text x="870" y="116" text-anchor="middle" font-size="12" fill="#586174">Q&amp;A &amp; Wrap-up</text>
+        <text x="870" y="160" text-anchor="middle" font-size="12" fill="#007965" font-weight="700">30 min</text>
+        <text x="490" y="205" text-anchor="middle" font-size="13" fill="#586174">Numbered notebooks map to the KDD tutorial flow and run on free-tier Google Colab.</text>
+      </svg>
+    </div>
+
+    <div class="step-list">
+      <div class="step">
+        <strong>Part 1 &mdash; The Modern Data Scientist&rsquo;s Toolkit (30 min)</strong>
+        <p class="muted" style="margin:6px 0 0;">Overview of structured data challenges (tabular &amp; time series). Introduction to AutoGluon as the unified AutoML framework. Quick setup check to ensure all attendees can initialize the libraries in Colab.</p>
+        <p style="margin:8px 0 0;"><span class="pill blue">Tabular data</span><span class="pill blue">Time series</span><span class="pill blue">AutoGluon intro</span><span class="pill blue">Setup</span></p>
+      </div>
+      <div class="step">
+        <strong>Part 2 &mdash; AutoGluon Fundamentals (1 hour)</strong>
+        <p class="muted" style="margin:6px 0 0;">The philosophy of multi-layer stacked ensembling vs. hyperparameter optimization. <em>Coding Exercise:</em> Attendees build base <code>TabularPredictor</code> and <code>TimeSeriesPredictor</code> pipelines, experiencing the high-level API for different modalities.</p>
+        <p style="margin:8px 0 0;"><span class="pill blue">Stack Ensembling</span><span class="pill blue">TabularPredictor</span><span class="pill blue">TimeSeriesPredictor</span><span class="pill blue">Coding Exercise</span></p>
+      </div>
+      <div class="step">
+        <strong>Part 3 &mdash; Foundation Models for Structured Data Under the Hood (1 hour)</strong>
+        <p class="muted" style="margin:6px 0 0;"><strong>Chronos-2 (Time Series):</strong> Understanding time series tokenization, group attention, and multivariate zero-shot forecasting. <strong>Tabular Foundation Models:</strong> Understanding TabPFN, Mitra, and TabICL. Handling complex covariates, defining custom evaluation metrics, and optimizing inference speeds for AutoML systems of tabular foundation models.</p>
+        <p style="margin:8px 0 0;"><span class="pill">Chronos-2</span><span class="pill">Tokenization</span><span class="pill">Group Attention</span><span class="pill">TabPFN</span><span class="pill">Mitra</span><span class="pill">TabICL</span></p>
+      </div>
+      <div class="step">
+        <strong>Part 4 &mdash; Q&amp;A and Wrap-up (30 min)</strong>
+        <p class="muted" style="margin:6px 0 0;">Best practices for deploying AutoGluon and FM4SDs effectively. Common pitfalls in data formatting and evaluation. <em>&ldquo;Bring Your Own Data&rdquo; (BYOD) challenge</em>: Attendees upload a small CSV from their own domain for 1-on-1 architecture advice from tutors.</p>
+        <p style="margin:8px 0 0;"><span class="pill green">BYOD Challenge</span><span class="pill green">Best Practices</span><span class="pill green">1-on-1 Advice</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Notebooks -->
+  <section id="notebooks">
+    <h2>Hands-On Colab Notebooks</h2>
+    <p>Each technical section culminates in a guided API coding exercise. Open any notebook directly in Google Colab using the links below.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>Notebook 1 &mdash; Setup &amp; Introduction</h3>
+        <p class="muted">Install AutoGluon, verify Colab environment, introduce the tutorial datasets and learning objectives.</p>
+        <a href="#" class="pill blue" style="text-decoration:none;">Open in Colab &rarr;</a>
+      </div>
+      <div class="card">
+        <h3>Notebook 2 &mdash; AutoGluon Tabular</h3>
+        <p class="muted">Build a <code>TabularPredictor</code> from scratch. Experience multi-layer stack ensembling with a few lines of code.</p>
+        <a href="#" class="pill blue" style="text-decoration:none;">Open in Colab &rarr;</a>
+      </div>
+      <div class="card">
+        <h3>Notebook 3 &mdash; AutoGluon Time Series</h3>
+        <p class="muted">Build a <code>TimeSeriesPredictor</code> pipeline. Explore probabilistic forecasting and model leaderboards.</p>
+        <a href="#" class="pill blue" style="text-decoration:none;">Open in Colab &rarr;</a>
+      </div>
+      <div class="card">
+        <h3>Notebook 4 &mdash; Chronos-2 Deep Dive</h3>
+        <p class="muted">Tokenize multivariate time series with Chronos-2. Run zero-shot multivariate forecasting and interpret group-attention patterns.</p>
+        <a href="#" class="pill blue" style="text-decoration:none;">Open in Colab &rarr;</a>
+      </div>
+      <div class="card">
+        <h3>Notebook 5 &mdash; Tabular Foundation Models</h3>
+        <p class="muted">Compare TabPFN, Mitra, and TabICL on classification and regression tasks. Fine-tune and integrate with AutoGluon ensembles.</p>
+        <a href="#" class="pill blue" style="text-decoration:none;">Open in Colab &rarr;</a>
+      </div>
+      <div class="card">
+        <h3>Notebook 6 &mdash; End-to-End Pipeline</h3>
+        <p class="muted">Fuse fine-tuned foundation models with classical ML baselines. Deploy a production-ready AutoML pipeline for structured data.</p>
+        <a href="#" class="pill blue" style="text-decoration:none;">Open in Colab &rarr;</a>
+      </div>
+    </div>
+    <div class="callout blue" style="margin-top:18px;">
+      <strong>Note:</strong> All notebooks run on Google Colab free tier (CPU or T4 GPU). Datasets are hosted on Hugging Face / AWS S3. No local setup required.
+    </div>
+  </section>
+
+  <!-- What Participants Learn -->
+  <section>
+    <h2>What Participants Learn</h2>
+    <div class="two-col">
+      <div>
+        <p>This tutorial provides a complete technical journey from foundational AutoML principles to cutting-edge foundation model deployment for structured data.</p>
+        <p><span class="pill green">SETUP</span><span class="pill green">ENSEMBLING</span><span class="pill green">FORECASTING</span><span class="pill green">FINE-TUNING</span><span class="pill green">DEPLOYMENT</span><span class="pill green">BYOD</span></p>
+        <ul style="color:var(--muted); padding-left:18px;">
+          <li>Understand the structured data challenge landscape</li>
+          <li>Use AutoGluon&rsquo;s unified API for tabular and time-series tasks</li>
+          <li>Apply Chronos-2 for zero-shot multivariate forecasting</li>
+          <li>Leverage TabPFN, Mitra, and TabICL for tabular tasks</li>
+          <li>Fine-tune FM4SDs and fuse with classical baselines</li>
+          <li>Evaluate with custom metrics and uncertainty quantification</li>
+        </ul>
+        <div class="callout" style="margin-top:16px;">
+          <strong>BYOD Challenge:</strong> Because AutoGluon requires only three lines of code (<code>init</code>, <code>fit</code>, <code>predict</code>), we dedicate the final 15 minutes to a &ldquo;Bring Your Own Data&rdquo; challenge where tutors provide 1-on-1 architecture advice on real participant data.
+        </div>
+      </div>
+      <div class="diagram" aria-label="AutoML + FM4SD pipeline">
+        <svg width="580" height="320" viewBox="0 0 580 320" role="img" aria-label="Tutorial learning pipeline">
+          <defs>
+            <marker id="ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#146EB4"/>
+            </marker>
+          </defs>
+          <!-- Row 1: Data Sources -->
+          <rect x="20" y="20" width="120" height="52" rx="12" fill="#fff8ec" stroke="#FF9900"/>
+          <text x="80" y="46" text-anchor="middle" font-size="13" font-weight="700">Time Series</text>
+          <text x="80" y="62" text-anchor="middle" font-size="11" fill="#586174">multivariate</text>
+
+          <rect x="160" y="20" width="120" height="52" rx="12" fill="#fff8ec" stroke="#FF9900"/>
+          <text x="220" y="46" text-anchor="middle" font-size="13" font-weight="700">Tabular</text>
+          <text x="220" y="62" text-anchor="middle" font-size="11" fill="#586174">classification/regression</text>
+
+          <!-- Arrow down to AutoGluon -->
+          <path d="M80 72 L80 108" stroke="#146EB4" stroke-width="2.5" marker-end="url(#ar2)"/>
+          <path d="M220 72 L220 108" stroke="#146EB4" stroke-width="2.5" marker-end="url(#ar2)"/>
+
+          <!-- AutoGluon box -->
+          <rect x="20" y="108" width="260" height="52" rx="14" fill="#eef5ff" stroke="#146EB4" stroke-width="2"/>
+          <text x="150" y="134" text-anchor="middle" font-size="15" font-weight="800" fill="#146EB4">AutoGluon</text>
+          <text x="150" y="151" text-anchor="middle" font-size="11" fill="#586174">Multi-layer stack ensembling</text>
+
+          <!-- Arrow down -->
+          <path d="M150 160 L150 196" stroke="#146EB4" stroke-width="2.5" marker-end="url(#ar2)"/>
+
+          <!-- FM4SD Row -->
+          <rect x="20" y="196" width="75" height="56" rx="12" fill="#e7fff9" stroke="#007965"/>
+          <text x="57" y="222" text-anchor="middle" font-size="12" font-weight="700">Chronos-2</text>
+          <text x="57" y="238" text-anchor="middle" font-size="10" fill="#586174">time series</text>
+
+          <rect x="107" y="196" width="65" height="56" rx="12" fill="#e7fff9" stroke="#007965"/>
+          <text x="139" y="222" text-anchor="middle" font-size="12" font-weight="700">TabPFN</text>
+          <text x="139" y="238" text-anchor="middle" font-size="10" fill="#586174">tabular</text>
+
+          <rect x="184" y="196" width="55" height="56" rx="12" fill="#e7fff9" stroke="#007965"/>
+          <text x="211" y="222" text-anchor="middle" font-size="12" font-weight="700">Mitra</text>
+          <text x="211" y="238" text-anchor="middle" font-size="10" fill="#586174">tabular</text>
+
+          <!-- Arrow down to output -->
+          <path d="M150 252 L150 286" stroke="#007965" stroke-width="2.5" marker-end="url(#ar2)"/>
+
+          <!-- Output -->
+          <rect x="60" y="286" width="180" height="22" rx="10" fill="#232F3E"/>
+          <text x="150" y="301" text-anchor="middle" font-size="12" font-weight="700" fill="#FF9900">Production Pipeline</text>
+
+          <!-- Right side: Classical ML -->
+          <rect x="340" y="108" width="210" height="52" rx="14" fill="#f6f8fc" stroke="#dfe5f2"/>
+          <text x="445" y="134" text-anchor="middle" font-size="13" font-weight="700" fill="#172033">Classical ML Baselines</text>
+          <text x="445" y="151" text-anchor="middle" font-size="11" fill="#586174">LightGBM, CatBoost, XGBoost&hellip;</text>
+
+          <!-- Fusion arrow -->
+          <path d="M340 134 L282 160" stroke="#586174" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#ar2)"/>
+
+          <text x="445" y="220" text-anchor="middle" font-size="13" fill="#586174" font-style="italic">Fused with</text>
+          <text x="445" y="238" text-anchor="middle" font-size="13" fill="#586174" font-style="italic">FM4SDs for</text>
+          <text x="445" y="256" text-anchor="middle" font-size="13" fill="#586174" font-style="italic">max accuracy</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tutors -->
+  <section id="tutors">
+    <h2>Tutorial Organizers</h2>
+    <div class="grid-3">
+      <div class="card">
+        <div class="badge aws">Amazon Web Services</div>
+        <h3>Boran Han</h3>
+        <p class="muted">Amazon Web Services</p>
+        <p>Applied scientist working on AutoML, foundation models for structured data, and agentic frameworks. Core contributor to AutoGluon and MLZero.</p>
+        <p><a href="mailto:boranhan@amazon.com">boranhan@amazon.com</a></p>
+      </div>
+      <div class="card">
+        <div class="badge prior">Prior Labs</div>
+        <h3>Nick Erickson</h3>
+        <p class="muted">Prior Labs</p>
+        <p>Creator of AutoGluon-Tabular. Expert in AutoML, ensemble methods, and scalable machine learning systems for tabular data.</p>
+        <p><a href="mailto:nick@priorlabs.ai">nick@priorlabs.ai</a></p>
+      </div>
+      <div class="card">
+        <div class="badge aws">Amazon Web Services</div>
+        <h3>Abdul Fatir Ansari</h3>
+        <p class="muted">Amazon Web Services</p>
+        <p>Lead author of the Chronos series. Researcher working on deep learning for time series, probabilistic forecasting, and foundation models.</p>
+        <p><a href="mailto:ansarnd@amazon.com">ansarnd@amazon.com</a></p>
+      </div>
+      <div class="card">
+        <div class="badge aws">Amazon Web Services</div>
+        <h3>Oleksandr Shchur</h3>
+        <p class="muted">Amazon Web Services</p>
+        <p>Lead author of AutoGluon-TimeSeries. Researcher specializing in probabilistic time series forecasting and AutoML for temporal data.</p>
+        <p><a href="mailto:shchuro@amazon.com">shchuro@amazon.com</a></p>
+      </div>
+      <div class="card">
+        <div class="badge aws">Amazon Web Services</div>
+        <h3>Xiyuan Zhang</h3>
+        <p class="muted">Amazon Web Services</p>
+        <p>Applied scientist specializing in retrieval-augmented generation, reinforcement learning, and machine learning systems.</p>
+        <p><a href="mailto:xiyuanz@amazon.com">xiyuanz@amazon.com</a></p>
+      </div>
+      <div class="card">
+        <div class="badge aws">Amazon Web Services</div>
+        <h3>Shuai Zhang</h3>
+        <p class="muted">Amazon Web Services</p>
+        <p>Applied scientist working on foundation models and AutoML for structured data modalities.</p>
+        <p><a href="mailto:shuaizs@amazon.com">shuaizs@amazon.com</a></p>
+      </div>
+      <div class="card">
+        <div class="badge aws">Amazon Web Services</div>
+        <h3>Haoyang Fang</h3>
+        <p class="muted">Amazon Web Services</p>
+        <p>Applied scientist working on agentic frameworks to enhance RL performance. Develops AutoGluon Multimodal and leads MLZero, a multi-agent system for AutoML.</p>
+        <p><a href="mailto:haoyfang@amazon.com">haoyfang@amazon.com</a></p>
+      </div>
+      <div class="card">
+        <div class="badge aws">Amazon Web Services</div>
+        <h3>Danielle Maddix</h3>
+        <p class="muted">Amazon Web Services (Senior Applied Scientist)</p>
+        <p>Works on statistical and deep learning foundation models for structured data. Leads the sciML research initiative at AWS AI.</p>
+        <p><a href="mailto:dmmaddix@amazon.com">dmmaddix@amazon.com</a></p>
+      </div>
+      <div class="card">
+        <div class="badge aws">Amazon Web Services</div>
+        <h3>Michael Bohlke-Schneider</h3>
+        <p class="muted">Amazon Web Services (Applied Science Manager)</p>
+        <p>Works on machine learning and forecasting, with a focus on foundation models for structured data and AutoML.</p>
+        <p><a href="mailto:bohlkem@amazon.com">bohlkem@amazon.com</a></p>
+      </div>
+      <div class="card">
+        <div class="badge aws">Amazon Web Services</div>
+        <h3>Yuyang (Bernie) Wang</h3>
+        <p class="muted">Amazon Web Services (Principal Scientist)</p>
+        <p>Aims to democratize advanced AI/ML capabilities, making them accessible to practitioners across diverse domains.</p>
+        <p><a href="mailto:yuyawang@amazon.com">yuyawang@amazon.com</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Prior Presentations -->
+  <section>
+    <h2>Prior Presentations</h2>
+    <div class="grid">
+      <div class="card">
+        <span class="pill">KDD 2020</span>
+        <h3>AutoGluon-Tabular: Robust and Accurate AutoML for Structured Data</h3>
+        <p class="muted">Virtual &mdash; August 2020</p>
+        <p>Introduced AutoGluon&rsquo;s core ensembling architecture for tabular data. Focused on robust, high-accuracy AutoML without manual tuning.</p>
+      </div>
+      <div class="card">
+        <span class="pill">KDD 2022</span>
+        <h3>Multimodal AutoML for Image, Text and Tabular Data</h3>
+        <p class="muted">Washington, DC &mdash; August 2022 &mdash; ~200 attendees</p>
+        <p>Extended AutoGluon to multi-modal settings including text and image data alongside tabular modalities.</p>
+      </div>
+    </div>
+    <div class="callout blue" style="margin-top:18px;">
+      <strong>What&rsquo;s new in 2026:</strong> While previous tutorials introduced AutoGluon&rsquo;s core ensembling and multi-modal capabilities, the 2026 tutorial represents a major paradigm shift by adding modern Foundation Models for Structured Data (FM4SD) and introducing <strong>time series forecasting with Chronos-2</strong>&mdash;a distinct temporal modality not covered in previous tutorials.
+    </div>
+  </section>
+
+  <!-- Key References -->
+  <section>
+    <h2>Key Papers &amp; Resources</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Paper</th>
+          <th>Venue</th>
+          <th>Link</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>AutoGluon-Tabular: Robust and Accurate AutoML for Structured Data &mdash; <em>Erickson et al.</em></td>
+          <td>AutoML Conference 2020</td>
+          <td><a href="https://arxiv.org/abs/2003.06505" target="_blank">arXiv</a></td>
+        </tr>
+        <tr>
+          <td>AutoGluon-TimeSeries: AutoML for Probabilistic Time Series Forecasting &mdash; <em>Shchur et al.</em></td>
+          <td>AutoML Conference 2023</td>
+          <td><a href="https://arxiv.org/abs/2308.05566" target="_blank">arXiv</a></td>
+        </tr>
+        <tr>
+          <td>Chronos: Learning the Language of Time Series &mdash; <em>Ansari et al.</em></td>
+          <td>TMLR 2024</td>
+          <td><a href="https://arxiv.org/abs/2403.07815" target="_blank">arXiv</a></td>
+        </tr>
+        <tr>
+          <td>Chronos-2: From Univariate to Universal Forecasting &mdash; <em>Ansari et al.</em></td>
+          <td>arXiv 2025</td>
+          <td><a href="https://arxiv.org/abs/2510.15821" target="_blank">arXiv</a></td>
+        </tr>
+        <tr>
+          <td>Accurate predictions on small data with a tabular foundation model (TabPFN) &mdash; <em>Hollmann et al.</em></td>
+          <td>Nature 2025</td>
+          <td><a href="https://www.nature.com/articles/s41586-024-08328-6" target="_blank">Nature</a></td>
+        </tr>
+        <tr>
+          <td>Mitra: Mixed Synthetic Priors for Enhancing Tabular Foundation Models &mdash; <em>Zhang et al.</em></td>
+          <td>NeurIPS 2025</td>
+          <td><a href="#" target="_blank">arXiv</a></td>
+        </tr>
+        <tr>
+          <td>TabICL: A Tabular Foundation Model for In-Context Learning on Large Data &mdash; <em>Qu et al.</em></td>
+          <td>arXiv 2025</td>
+          <td><a href="https://arxiv.org/abs/2502.05564" target="_blank">arXiv</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Societal Impact -->
+  <section>
+    <h2>Societal Impact</h2>
+    <div class="card">
+      <p>Improved tabular and time series modeling impacts critical resource allocation in <strong>healthcare</strong>, <strong>finance</strong>, and <strong>logistics</strong>. While mastering tools like AutoGluon and its engines democratizes powerful predictive capabilities, it carries the risk of automation bias&mdash;where users blindly trust ML outputs.</p>
+      <p>This tutorial addresses this by emphasizing rigorous data science practices such as <strong>probabilistic forecasting</strong> and <strong>uncertainty quantification</strong>, ensuring attendees learn to evaluate model uncertainty and apply appropriate skepticism to automated predictions.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  KDD&rsquo;26 Tutorial &mdash; <em>Taming Structured Data Foundation Models with AutoML: A Hands-On Guide</em> &middot; Jeju, Korea &middot; 2026
+  <br>
+  <span style="font-size:.85rem;">Boran Han, Nick Erickson, Abdul Fatir Ansari, Oleksandr Shchur, Xiyuan Zhang, Shuai Zhang, Haoyang Fang, Danielle Maddix, Michael Bohlke-Schneider, Yuyang (Bernie) Wang</span>
+</footer>
+
+</body>
+</html>
