@@ -61,6 +61,7 @@
     .badge { display: inline-block; padding: 3px 9px; border-radius: 6px; background: #FF9900; color: #fff; font-size: .75rem; font-weight: 700; margin-bottom: 6px; }
     .badge.aws { background: #232F3E; }
     .badge.prior { background: #5a35c2; }
+    .pill.tba { background: #eef0f5; color: #586174; }
     @media (max-width: 860px) {
       .two-col { grid-template-columns: 1fr; }
       th, td { font-size: .82rem; padding: 8px; }
@@ -94,7 +95,7 @@
     <div class="card">
       <h3>Tutorial Paper</h3>
       <p class="muted">The accepted KDD&rsquo;26 tutorial paper describing the motivation, outline, and prior presentations.</p>
-      <a href="#" id="paper-link">Read tutorial paper &rarr;</a>
+      <span class="pill tba" id="paper-link">Coming soon</span>
     </div>
     <div class="card">
       <h3>AutoGluon</h3>
@@ -205,32 +206,32 @@
       <div class="card">
         <h3>Notebook 1 &mdash; Setup &amp; Introduction</h3>
         <p class="muted">Install AutoGluon, verify Colab environment, introduce the tutorial datasets and learning objectives.</p>
-        <a href="#" class="pill blue" style="text-decoration:none;">Open in Colab &rarr;</a>
+        <span class="pill tba">Colab link coming soon</span>
       </div>
       <div class="card">
         <h3>Notebook 2 &mdash; AutoGluon Tabular</h3>
         <p class="muted">Build a <code>TabularPredictor</code> from scratch. Experience multi-layer stack ensembling with a few lines of code.</p>
-        <a href="#" class="pill blue" style="text-decoration:none;">Open in Colab &rarr;</a>
+        <span class="pill tba">Colab link coming soon</span>
       </div>
       <div class="card">
         <h3>Notebook 3 &mdash; AutoGluon Time Series</h3>
         <p class="muted">Build a <code>TimeSeriesPredictor</code> pipeline. Explore probabilistic forecasting and model leaderboards.</p>
-        <a href="#" class="pill blue" style="text-decoration:none;">Open in Colab &rarr;</a>
+        <span class="pill tba">Colab link coming soon</span>
       </div>
       <div class="card">
         <h3>Notebook 4 &mdash; Chronos-2 Deep Dive</h3>
         <p class="muted">Tokenize multivariate time series with Chronos-2. Run zero-shot multivariate forecasting and interpret group-attention patterns.</p>
-        <a href="#" class="pill blue" style="text-decoration:none;">Open in Colab &rarr;</a>
+        <span class="pill tba">Colab link coming soon</span>
       </div>
       <div class="card">
         <h3>Notebook 5 &mdash; Tabular Foundation Models</h3>
         <p class="muted">Compare TabPFN, Mitra, and TabICL on classification and regression tasks. Fine-tune and integrate with AutoGluon ensembles.</p>
-        <a href="#" class="pill blue" style="text-decoration:none;">Open in Colab &rarr;</a>
+        <span class="pill tba">Colab link coming soon</span>
       </div>
       <div class="card">
         <h3>Notebook 6 &mdash; End-to-End Pipeline</h3>
         <p class="muted">Fuse fine-tuned foundation models with classical ML baselines. Deploy a production-ready AutoML pipeline for structured data.</p>
-        <a href="#" class="pill blue" style="text-decoration:none;">Open in Colab &rarr;</a>
+        <span class="pill tba">Colab link coming soon</span>
       </div>
     </div>
     <div class="callout blue" style="margin-top:18px;">
@@ -336,7 +337,7 @@
         <div class="badge prior">Prior Labs</div>
         <h3>Nick Erickson</h3>
         <p class="muted">Prior Labs</p>
-        <p>Creator of AutoGluon-Tabular. Expert in AutoML, ensemble methods, and scalable machine learning systems for tabular data.</p>
+        <p>Lead developer and maintainer of AutoGluon and TabArena. Research scientist focused on AutoML and foundation models for structured data.</p>
         <p><a href="mailto:nick@priorlabs.ai">nick@priorlabs.ai</a></p>
       </div>
       <div class="card">
@@ -357,7 +358,7 @@
         <div class="badge aws">Amazon Web Services</div>
         <h3>Xiyuan Zhang</h3>
         <p class="muted">Amazon Web Services</p>
-        <p>Applied scientist specializing in retrieval-augmented generation, reinforcement learning, and machine learning systems.</p>
+        <p>Lead author of Mitra and co-author of the Chronos series. Applied scientist working on foundation models for tabular and time series data.</p>
         <p><a href="mailto:xiyuanz@amazon.com">xiyuanz@amazon.com</a></p>
       </div>
       <div class="card">
@@ -434,7 +435,7 @@
       <tbody>
         <tr>
           <td>AutoGluon-Tabular: Robust and Accurate AutoML for Structured Data &mdash; <em>Erickson et al.</em></td>
-          <td>AutoML Conference 2020</td>
+          <td>AutoML Workshop @ ICML 2020</td>
           <td><a href="https://arxiv.org/abs/2003.06505" target="_blank">arXiv</a></td>
         </tr>
         <tr>
@@ -460,11 +461,11 @@
         <tr>
           <td>Mitra: Mixed Synthetic Priors for Enhancing Tabular Foundation Models &mdash; <em>Zhang et al.</em></td>
           <td>NeurIPS 2025</td>
-          <td><a href="#" target="_blank">arXiv</a></td>
+          <td><a href="https://arxiv.org/abs/2510.21204" target="_blank">arXiv</a></td>
         </tr>
         <tr>
           <td>TabICL: A Tabular Foundation Model for In-Context Learning on Large Data &mdash; <em>Qu et al.</em></td>
-          <td>arXiv 2025</td>
+          <td>ICML 2025</td>
           <td><a href="https://arxiv.org/abs/2502.05564" target="_blank">arXiv</a></td>
         </tr>
       </tbody>
