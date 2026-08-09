@@ -91,8 +91,8 @@
   <section class="grid" aria-label="Quick links">
     <div class="card">
       <h3>Notebooks</h3>
-      <p class="muted">Hands-on Colab notebooks covering AutoGluon, Chronos-2, and tabular foundation models from setup to advanced topics.</p>
-      <a href="#notebooks">Browse notebooks &rarr;</a>
+      <p class="muted">Eight hands-on Colab notebooks covering AutoGluon, tabular foundation models, and time series &mdash; from first contact to pretraining your own TFM.</p>
+      <a href="#notebooks">Browse notebooks &rarr;</a> &middot; <a href="https://github.com/Innixma/kdd2026_tutorial_materials" target="_blank">GitHub &rarr;</a>
     </div>
     <div class="card">
       <h3>Tutorial Paper</h3>
@@ -203,41 +203,51 @@
   <!-- Notebooks -->
   <section id="notebooks">
     <h2>Hands-On Colab Notebooks</h2>
-    <p>Each technical section culminates in a guided API coding exercise. Open any notebook directly in Google Colab using the links below.</p>
+    <p>Each technical section culminates in a guided API coding exercise. Open any notebook directly in Google Colab using the links below, or browse the <a href="https://github.com/Innixma/kdd2026_tutorial_materials" target="_blank">GitHub repository</a> &mdash; every notebook ships with saved outputs so you can read along without running.</p>
     <div class="grid">
       <div class="card">
-        <h3>Notebook 1 &mdash; Setup &amp; Introduction</h3>
-        <p class="muted">Install AutoGluon, verify Colab environment, introduce the tutorial datasets and learning objectives.</p>
-        <span class="pill tba">Colab link coming soon</span>
+        <h3>Notebook 01 — First Contact</h3>
+        <p class="muted">Naive XGBoost vs AutoGluon-bagged XGBoost vs TabICLv2 vs TabFM on one real dataset. Opens with the TFM at-a-glance table (constraints &amp; licenses).</p>
+        <a href="https://colab.research.google.com/github/Innixma/kdd2026_tutorial_materials/blob/main/notebooks/01_first_contact.ipynb" target="_blank">Open in Colab &rarr;</a>
       </div>
       <div class="card">
-        <h3>Notebook 2 &mdash; AutoGluon Tabular</h3>
-        <p class="muted">Build a <code>TabularPredictor</code> from scratch. Experience multi-layer stack ensembling with a few lines of code.</p>
-        <span class="pill tba">Colab link coming soon</span>
+        <h3>Notebook 02 — AutoGluon Essentials</h3>
+        <p class="muted">Fit, predict, evaluate, and inspect a <code>TabularPredictor</code>; pick the right metric first, finish with the <code>extreme</code> preset.</p>
+        <a href="https://colab.research.google.com/github/Innixma/kdd2026_tutorial_materials/blob/main/notebooks/02_autogluon_essentials.ipynb" target="_blank">Open in Colab &rarr;</a>
       </div>
       <div class="card">
-        <h3>Notebook 3 &mdash; AutoGluon Time Series</h3>
-        <p class="muted">Build a <code>TimeSeriesPredictor</code> pipeline. Explore probabilistic forecasting and model leaderboards.</p>
-        <span class="pill tba">Colab link coming soon</span>
+        <h3>Notebook 03 — The TFM Zoo</h3>
+        <p class="muted">Many foundation models behind one predictor: TabICLv2, TabDPT-Turbo, TabPFN-3, bagged and ensembled, with the classical toolkit one uncomment away.</p>
+        <a href="https://colab.research.google.com/github/Innixma/kdd2026_tutorial_materials/blob/main/notebooks/03_tfm_zoo.ipynb" target="_blank">Open in Colab &rarr;</a>
       </div>
       <div class="card">
-        <h3>Notebook 4 &mdash; Chronos-2 Deep Dive</h3>
-        <p class="muted">Tokenize multivariate time series with Chronos-2. Run zero-shot multivariate forecasting and interpret group-attention patterns.</p>
-        <span class="pill tba">Colab link coming soon</span>
+        <h3>Notebook 04 — Inside the Prior</h3>
+        <p class="muted">Generate the synthetic datasets TFMs are pretrained on, live, and see what the learnability filter rejects. CPU only.</p>
+        <a href="https://colab.research.google.com/github/Innixma/kdd2026_tutorial_materials/blob/main/notebooks/04_inside_the_prior.ipynb" target="_blank">Open in Colab &rarr;</a>
       </div>
       <div class="card">
-        <h3>Notebook 5 &mdash; Tabular Foundation Models</h3>
-        <p class="muted">Compare TabPFN, Mitra, and TabICL on classification and regression tasks. Fine-tune and integrate with AutoGluon ensembles.</p>
-        <span class="pill tba">Colab link coming soon</span>
+        <h3>Notebook 05 — Pretrain Your Own</h3>
+        <p class="muted">Pretrain a working TabPFN-style transformer in about a minute with nanoTabPFN, then apply it zero-shot to real data.</p>
+        <a href="https://colab.research.google.com/github/Innixma/kdd2026_tutorial_materials/blob/main/notebooks/05_pretrain_your_own.ipynb" target="_blank">Open in Colab &rarr;</a>
       </div>
       <div class="card">
-        <h3>Notebook 6 &mdash; End-to-End Pipeline</h3>
-        <p class="muted">Fuse fine-tuned foundation models with classical ML baselines. Deploy a production-ready AutoML pipeline for structured data.</p>
-        <span class="pill tba">Colab link coming soon</span>
+        <h3>Notebook 06 — Thinking Mode</h3>
+        <p class="muted">TabPFN-3 thinking mode conquers the high-cardinality-categorical dataset where every TFM loses to CatBoost. Needs a free Prior Labs token.</p>
+        <a href="https://colab.research.google.com/github/Innixma/kdd2026_tutorial_materials/blob/main/notebooks/06_thinking_mode.ipynb" target="_blank">Open in Colab &rarr;</a>
+      </div>
+      <div class="card">
+        <h3>Notebook 07 — Non-IID Validation</h3>
+        <p class="muted">A naive split vs <code>validation_structure</code> on grouped data: the naive estimate is off 25&times; and picks the wrong model. CPU only.</p>
+        <a href="https://colab.research.google.com/github/Innixma/kdd2026_tutorial_materials/blob/main/notebooks/07_noniid_validation.ipynb" target="_blank">Open in Colab &rarr;</a>
+      </div>
+      <div class="card">
+        <h3>Notebook 08 — Time Series Forecasting</h3>
+        <p class="muted">Forecasting with AutoGluon&rsquo;s <code>TimeSeriesPredictor</code> and time-series foundation models.</p>
+        <a href="https://colab.research.google.com/github/Innixma/kdd2026_tutorial_materials/blob/main/notebooks/08_timeseries_forecasting.ipynb" target="_blank">Open in Colab &rarr;</a>
       </div>
     </div>
     <div class="callout blue" style="margin-top:18px;">
-      <strong>Note:</strong> All notebooks run on Google Colab free tier (CPU or T4 GPU). Datasets are hosted on Hugging Face / AWS S3. No local setup required.
+      <strong>Note:</strong> All notebooks run on Google Colab free tier (CPU or T4 GPU) and open with the right runtime preselected. Datasets load from OpenML; model checkpoints from Hugging Face. No local setup required.
     </div>
   </section>
 
